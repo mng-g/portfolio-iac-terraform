@@ -23,7 +23,7 @@ module "vpc" {
 
 module "ec2" {
   source         = "../../modules/ec2"
-  ami_id         = "ami-07a6f770277670015"  # Replace with a free-tier eligible AMI (e.g., Amazon Linux 2)
+  ami_id         = "ami-0274f4b62b6ae3bd5"  # Replace with a free-tier eligible AMI (e.g., Amazon Linux 2)
   instance_type  = "t2.micro"      # Free-tier eligible
   subnet_id      = module.vpc.public_subnets[0]
   instance_name  = "prod-ec2-instance"
