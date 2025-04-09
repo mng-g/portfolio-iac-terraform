@@ -11,16 +11,6 @@ provider "aws" {
   region = "eu-north-1"
 }
 
-data "aws_ami" "amazon_linux_2" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-}
-
 module "vpc" {
   source              = "../../modules/vpc"
   vpc_cidr            = "10.1.0.0/16"  # Use a CIDR that suits production
@@ -33,9 +23,10 @@ module "vpc" {
 
 module "ec2" {
   source         = "../../modules/ec2"
-  ami_id         = data.aws_ami.amazon_linux_2.id  # Replace with a free-tier eligible AMI (e.g., Amazon Linux 2)
-  instance_type  = "t2.micro"      # Free-tier eligible
+  ami_id         = "ami-0a2370e7c0f21e179"  # Replace with a free-tier eligible AMI (e.g., Amazon Linux 2)
+  instance_type  = "t3.micro"      # Free-tier eligible
   subnet_id      = module.vpc.public_subnets[0]
+  public_key     = var.public_key     # Pass the root variable to the module
   instance_name  = "prod-ec2-instance"
   tags           = { Environment = "prod" }
 }

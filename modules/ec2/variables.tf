@@ -24,3 +24,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "public_key" {
+  description = "Public key for accessing EC2"
+  type        = string
+}

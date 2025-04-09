@@ -26,6 +26,7 @@ module "ec2" {
   ami_id         = "ami-0a2370e7c0f21e179" # Use an appropriate free-tier eligible AMI (e.g., Amazon Linux 2)
   instance_type  = "t3.micro"
   subnet_id      = module.vpc.public_subnets[0]
+  public_key     = var.public_key     # Pass the root variable to the module
   instance_name  = "dev-ec2-instance"
   tags           = { Environment = "dev" }
 }
