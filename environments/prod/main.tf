@@ -33,4 +33,9 @@ module "ec2" {
   tags           = { Environment = "prod" }
 }
 
-# Optionally, you can add additional modules (for networking, security, etc.)
+module "monitoring" {
+  source     = "../../modules/monitoring"
+  instance_id = module.ec2.instance_id
+  environment = "prod"
+  tags       = { Environment = "prod" }
+}

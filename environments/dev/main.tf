@@ -32,3 +32,10 @@ module "ec2" {
   instance_name  = "dev-ec2-instance"
   tags           = { Environment = "dev" }
 }
+
+module "monitoring" {
+  source      = "../../modules/monitoring"
+  instance_id = module.ec2.instance_id
+  environment = "dev"
+  tags        = { Environment = "dev" }
+}
