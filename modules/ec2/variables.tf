@@ -29,3 +29,8 @@ variable "public_key" {
   description = "Public key for accessing EC2"
   type        = string
 }
+
+variable "vpc_id" {
+  description = "The VPC ID in which the EC2 instance will be launched."
+  type        = string
+}
