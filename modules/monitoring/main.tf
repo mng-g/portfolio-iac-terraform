@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "cloudtrail" {
   bucket = "my-terraform-cloudtrail-logs-${var.environment}"
-  
+
   tags = merge(var.tags, {
     Name        = "cloudtrail-logs-${var.environment}",
     Environment = var.environment
@@ -78,7 +78,7 @@ resource "aws_cloudtrail" "this" {
   is_multi_region_trail         = true
   enable_logging                = true
 
-  cloud_watch_logs_group_arn    = aws_cloudwatch_log_group.cloudtrail.arn
+  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
   cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail_cloudwatch_role.arn
 
   tags = merge(var.tags, {
