@@ -10,7 +10,7 @@ resource "aws_instance" "this" {
 }
 
 resource "aws_key_pair" "this" {
-  key_name   = "my-key-pair"
+  key_name   = var.key_name
   public_key = var.public_key
 }
 

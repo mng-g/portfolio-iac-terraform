@@ -27,6 +27,7 @@ module "ec2" {
   instance_type  = "t3.micro"
   subnet_id      = module.vpc.public_subnets[0]
   public_key     = var.public_key     # Pass the root variable to the module
+  key_name       = var.key_name      # Pass the key name variable to the module
   vpc_id         = module.vpc.vpc_id    # Pass the VPC ID from your VPC module
   instance_name  = "dev-ec2-instance"
   tags           = { Environment = "dev" }
