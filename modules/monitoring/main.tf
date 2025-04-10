@@ -63,7 +63,6 @@ resource "aws_cloudwatch_log_group" "cloudtrail" {
   })
 }
 
-
 resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
   name = "CloudTrail_CloudWatchLogs_Role_${var.environment}"
   assume_role_policy = jsonencode({
@@ -120,7 +119,11 @@ resource "aws_cloudtrail" "this" {
     Environment = var.environment
   })
 
-  depends_on = [aws_iam_role_policy_attachment.cloudtrail_cloudwatch_attach, aws_s3_bucket_policy.cloudtrail_policy]
+  depends_on = [
+    aws_cloudwatch_log_group.cloudtrail,
+    aws_iam_role_policy_attachment.cloudtrail_cloudwatch_attach,
+    aws_s3_bucket_policy.cloudtrail_policy
+  ]
 }
 
 resource "aws_cloudwatch_metric_alarm" "high_cpu_alarm" {
