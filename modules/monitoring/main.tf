@@ -55,14 +55,14 @@ resource "aws_s3_bucket_policy" "cloudtrail_policy" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudtrail" {
-  name              = "/aws/cloudtrail/my-cloudtrail-${var.environment}"
-  retention_in_days = 30   # Adjust retention as needed
-
+  name              = "aws-cloudtrail-my-cloudtrail-${var.environment}"
+  retention_in_days = 30
   tags = merge(var.tags, {
     Name        = "cloudtrail-log-group-${var.environment}",
     Environment = var.environment
   })
 }
+
 
 resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
   name = "CloudTrail_CloudWatchLogs_Role_${var.environment}"
