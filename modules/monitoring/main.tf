@@ -7,10 +7,10 @@ resource "aws_s3_bucket" "cloudtrail" {
   })
 }
 
-resource "aws_s3_bucket_acl" "cloudtrail_acl" {
-  bucket = aws_s3_bucket.cloudtrail.id
-  acl    = "private"
-}
+# resource "aws_s3_bucket_acl" "cloudtrail_acl" {
+#   bucket = aws_s3_bucket.cloudtrail.id
+#   acl    = "private"
+# }
 
 resource "aws_s3_bucket_versioning" "cloudtrail_versioning" {
   bucket = aws_s3_bucket.cloudtrail.id
@@ -18,6 +18,40 @@ resource "aws_s3_bucket_versioning" "cloudtrail_versioning" {
   versioning_configuration {
     status = "Enabled"
   }
+}
+
+data "aws_caller_identity" "current" {}
+
+resource "aws_s3_bucket_policy" "cloudtrail_policy" {
+  bucket = aws_s3_bucket.cloudtrail.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid       = "AWSCloudTrailAclCheck",
+        Effect    = "Allow",
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        },
+        Action    = "s3:GetBucketAcl",
+        Resource  = aws_s3_bucket.cloudtrail.arn
+      },
+      {
+        Sid       = "AWSCloudTrailWrite",
+        Effect    = "Allow",
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        },
+        Action    = "s3:PutObject",
+        Resource  = "${aws_s3_bucket.cloudtrail.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+        Condition = {
+          StringEquals = {
+            "s3:x-amz-acl" = "bucket-owner-full-control"
+          }
+        }
+      }
+    ]
+  })
 }
 
 resource "aws_cloudwatch_log_group" "cloudtrail" {
@@ -78,7 +112,7 @@ resource "aws_cloudtrail" "this" {
   is_multi_region_trail         = true
   enable_logging                = true
 
-  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
+  cloud_watch_logs_group_arn    = aws_cloudwatch_log_group.cloudtrail.arn
   cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail_cloudwatch_role.arn
 
   tags = merge(var.tags, {
@@ -86,7 +120,7 @@ resource "aws_cloudtrail" "this" {
     Environment = var.environment
   })
 
-  depends_on = [aws_iam_role_policy_attachment.cloudtrail_cloudwatch_attach]
+  depends_on = [aws_iam_role_policy_attachment.cloudtrail_cloudwatch_attach, aws_s3_bucket_policy.cloudtrail_policy]
 }
 
 resource "aws_cloudwatch_metric_alarm" "high_cpu_alarm" {
