@@ -1,4 +1,11 @@
 terraform {
+  required_version = ">= 1.3.0"  # Set to a recent stable version
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"  # Change this to the desired version range
+    }
+  }
   backend "remote" {
     organization = "mng-g"
     workspaces {
