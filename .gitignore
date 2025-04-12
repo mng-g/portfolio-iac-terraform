@@ -19,3 +19,7 @@ override.tf.json
 
 # Crash log files
 crash.log
+
+# Others
+README.md
+.github/
