@@ -22,7 +22,7 @@ jobs:
         working-directory: "environments/${{ matrix.environment }}"
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # ----------------------
       # Terraform Setup & Linting
