@@ -20,7 +20,7 @@ provider "aws" {
   default_tags {
     tags = {
       Environment = "Dev"
-      Project     = "Terraform-lab"   # add additional common tags as needed
+      Project     = "Terraform-lab" # add additional common tags as needed
     }
   }
 }
