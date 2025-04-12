@@ -2,7 +2,7 @@ resource "aws_vpc" "this" {
   cidr_block = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags = merge(var.tags, { Name = var.vpc_name })
+  #tags = merge(var.tags, { Name = var.vpc_name })
 }
 
 resource "aws_subnet" "public" {
@@ -11,7 +11,7 @@ resource "aws_subnet" "public" {
   cidr_block              = var.public_subnet_cidrs[count.index]
   availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = true
-  tags = merge(var.tags, { Name = "${var.vpc_name}-public-${count.index}" })
+  #tags = merge(var.tags, { Name = "${var.vpc_name}-public-${count.index}" })
 }
 
 resource "aws_route_table_association" "public" {
@@ -25,7 +25,7 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.this.id
   cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
-  tags = merge(var.tags, { Name = "${var.vpc_name}-private-${count.index}" })
+  #tags = merge(var.tags, { Name = "${var.vpc_name}-private-${count.index}" })
 }
 
 resource "aws_internet_gateway" "this" {
@@ -41,7 +41,7 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.this.id
   }
 
-  tags = merge(var.tags, { Name = "${var.vpc_name}-public-rt" })
+  #tags = merge(var.tags, { Name = "${var.vpc_name}-public-rt" })
 }
 
 # Optionally, you can define a NAT Gateway if needed.

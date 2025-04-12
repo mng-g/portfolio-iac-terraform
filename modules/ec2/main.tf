@@ -6,7 +6,7 @@ resource "aws_instance" "this" {
   vpc_security_group_ids = [aws_security_group.ec2_ssh.id]  # Attach the new SG
 
 
-  tags = merge(var.tags, { Name = var.instance_name })
+  #tags = merge(var.tags, { Name = var.instance_name })
 }
 
 resource "aws_key_pair" "this" {
@@ -35,5 +35,5 @@ resource "aws_security_group" "ec2_ssh" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(var.tags, { Name = "ec2-ssh-sg" })
+  #tags = merge(var.tags, { Name = "ec2-ssh-sg" })
 }

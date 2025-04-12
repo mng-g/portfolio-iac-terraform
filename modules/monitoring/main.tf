@@ -1,10 +1,10 @@
 resource "aws_s3_bucket" "cloudtrail" {
   bucket = "my-terraform-cloudtrail-logs-${var.environment}"
 
-  tags = merge(var.tags, {
-    Name        = "cloudtrail-logs-${var.environment}",
-    Environment = var.environment
-  })
+  #tags = merge(var.tags, {
+  #   Name        = "cloudtrail-logs-${var.environment}",
+  #   Environment = var.environment
+  # })
 }
 
 # resource "aws_s3_bucket_acl" "cloudtrail_acl" {
@@ -57,10 +57,10 @@ resource "aws_s3_bucket_policy" "cloudtrail_policy" {
 resource "aws_cloudwatch_log_group" "cloudtrail" {
   name              = "aws-cloudtrail-my-cloudtrail-${var.environment}"
   retention_in_days = 30
-  tags = merge(var.tags, {
-    Name        = "cloudtrail-log-group-${var.environment}",
-    Environment = var.environment
-  })
+  #tags = merge(var.tags, {
+  #   Name        = "cloudtrail-log-group-${var.environment}",
+  #   Environment = var.environment
+  # })
 }
 
 resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
@@ -115,10 +115,10 @@ resource "aws_cloudtrail" "this" {
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
   cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail_cloudwatch_role.arn
 
-  tags = merge(var.tags, {
-    Name        = "cloudtrail-${var.environment}",
-    Environment = var.environment
-  })
+  #tags = merge(var.tags, {
+  #   Name        = "cloudtrail-${var.environment}",
+  #   Environment = var.environment
+  # })
 
   depends_on = [
     aws_cloudwatch_log_group.cloudtrail,
@@ -142,6 +142,6 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu_alarm" {
     InstanceId = var.instance_id  # Adjust this to match the output name from your EC2 module
   }
 
-  tags = merge(var.tags, { Environment = var.environment })
+  #tags = merge(var.tags, { Environment = var.environment })
 }
 
