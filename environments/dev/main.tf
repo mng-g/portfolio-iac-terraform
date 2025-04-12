@@ -25,7 +25,7 @@ module "vpc" {
   availability_zones   = ["eu-north-1a", "eu-north-1b"]
   public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
   private_subnet_cidrs = ["10.0.3.0/24", "10.0.4.0/24"]
-  tags                 = { Environment = "dev" }
+  tags                 = { Environment = "Dev" }
 }
 
 module "ec2" {
@@ -37,12 +37,12 @@ module "ec2" {
   key_name      = var.key_name      # Pass the key name variable to the module
   vpc_id        = module.vpc.vpc_id # Pass the VPC ID from your VPC module
   instance_name = "dev-ec2-instance"
-  tags          = { Environment = "dev" }
+  tags          = { Environment = "Dev" }
 }
 
 module "monitoring" {
   source      = "../../modules/monitoring"
   instance_id = module.ec2.instance_id
   environment = "dev"
-  tags        = { Environment = "dev" }
+  tags        = { Environment = "Dev" }
 }

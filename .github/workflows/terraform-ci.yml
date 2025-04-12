@@ -27,10 +27,16 @@ jobs:
       # ----------------------
       # Terraform Setup & Linting
       # ----------------------
+
+      - name: Setup Terraform Cloud Credentials
+        run: |
+          mkdir -p ~/.terraform.d
+          echo '{"credentials": {"app.terraform.io": {"token": "${{ secrets.TFC_TOKEN }}"}}}' > ~/.terraform.d/credentials.tfrc.json
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: "1.3.0"  # Update to a recent stable version
+          terraform_version: "1.11.3"  # Update to a recent stable version
 
       - name: Terraform Format Check
         run: terraform fmt -check
