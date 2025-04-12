@@ -1,0 +1,78 @@
+name: Terraform CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    name: Validate Terraform for each environment
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [ "dev", "prod" ]
+    env:
+      TF_IN_AUTOMATION: "true"
+    defaults:
+      run:
+        working-directory: "environments/${{ matrix.environment }}"
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # ----------------------
+      # Terraform Setup & Linting
+      # ----------------------
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: "1.3.0"  # Update to a recent stable version
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      # ----------------------
+      # Terraform Plan and Output for Cost Estimation
+      # ----------------------
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -out=tfplan.binary
+
+      - name: Convert Terraform Plan to JSON
+        id: plan_to_json
+        run: |
+          terraform show -json tfplan.binary > plan.json
+          cat plan.json
+
+      # ----------------------
+      # Security Scans with tfsec
+      # ----------------------
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        # with:
+        #   args: .
+
+      # ----------------------
+      # Security Scans with Checkov
+      # ----------------------
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v6
+        with:
+          directory: .
+
+      # Optionally, you can output results as artifacts
+      - name: Upload Terraform Plan JSON
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-plan-${{ matrix.environment }}
+          path: plan.json
